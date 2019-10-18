@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+   <head>
+      <title>{{ title }}</title>
+      <link rel="stylesheet" href="../static/style.css/">
+   </head>
+
+   <body>
+      Huidig Programma:</br>
+      <!-- For loop logic of jinja template -->
+      {%for item in items%}   
+         min: {{ item[0] }} max: {{ item[1] }} start: {{ item[2] }} </br>
+      {%endfor%} 
+      
+      <form action = "" method = "POST">
+         min: <input type="number" placeholder="18.0" step="0.1" min="5" max="40" name="min" value="18.0"></input>
+         max: <input type="number" placeholder="20.0" step="0.1" min="5" max="40" name="max" value="20.0"></input>
+         start: <input type="datetime-local" name="start" min="{{ items[-1][2] if items|length > 0 }}" value="{{ items[-1][2] if items|length > 0 }}" required></input>         
+         <input type="submit" name="submit" value="Stel in"></input>
+      </form>
+      </br></br>
+      <a href="clear">Reset</a>
+      <a href="\">Home</a>
+   </body>
+</html>

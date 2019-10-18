@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd ~/Documents/BrewApp/GPIO/
+sudo python3 GPIO.py
+

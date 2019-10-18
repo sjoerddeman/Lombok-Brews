@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+   <head>
+      <title>{{ title }}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="../static/style.css/">
+   </head>
+
+   <body>
+      <div id="nav">
+         <a href="/">all</a>
+         <a href="/daily">daily</a>
+         <a href="/hourly">hourly</a>
+         <a href="/last_week">Last week</a>
+         <a href="/last_day">Last day</a>
+         <a href="/last_hour">Last hour</a>
+      </div>
+      <div id="chart">
+         <canvas id="myChart"></canvas>
+      </div>
+      <script src="{{ url_for('static', filename='Chart.bundle.min.js') }}"></script>
+      <script>
+      
+      var ctx = document.getElementById('myChart');
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: {{ labels|tojson }},
+              datasets: [{
+                  label: 'temperature',
+                  fill: false,
+                  backgroundColor: "#000000",
+                  data: {{ temperature|tojson }},
+                  borderColor: "#000000",
+                  borderWidth: 1
+              },
+            {
+                  label: 'min',
+                  fill: false,
+                  spanGaps: true,
+                  backgroundColor: '#0000ff',
+                  data: {{ min|tojson }},
+                  borderColor: '#0000ff',
+                  borderWidth: 1,
+                  pointRadius: 0,
+                  lineTension: 0
+              },
+            {
+                  label: 'max',
+                  fill: false,
+                  backgroundColor: '#ff0000',
+                  data: {{ max|tojson }},
+                  borderColor: '#ff0000',
+                  borderWidth: 1,
+                  pointRadius: 0,
+                  lineTension: 0
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: false
+                      }
+                  }]
+              }
+          }
+      });
+      </script>
+      </br>
+      <a href="setup">setup page</a>
+      <button id="myBtn">Open Modal</button>
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+         <!-- Modal content -->
+         <div class="modal-content">
+            <span class="close">&times;</span>
+            Huidig Programma</br>
+            <!-- For loop logic of jinja template -->
+            <div id="program_items">
+            </div>
+
+            <form action = "" method = "POST">
+               min: <input type="number" placeholder="18.0" step="0.1" min="5" max="40" name="min" value="18.0" required></input>
+               max: <input type="number" placeholder="20.0" step="0.1" min="5" max="40" name="max" value="20.0" required></input>
+               start: <input type="datetime-local" name="start" min="" value="" required></input>         
+               <input type="button" id="submit" value="Stel in"></input>
+            </form>
+            </br></br>
+            <a href="clear">Reset</a>
+            <a href="\">Home</a>
+         </div>
+
+      </div>
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+   </body>
+</html>

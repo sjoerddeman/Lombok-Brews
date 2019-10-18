@@ -1,0 +1,4 @@
+#!/bin/bash
+cd ~/Documents/BrewApp/WebServer/
+sudo python3 webserver.py
+
