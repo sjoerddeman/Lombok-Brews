@@ -32,7 +32,9 @@
                   backgroundColor: "#000000",
                   data: {{ temperature|tojson }},
                   borderColor: "#000000",
-                  borderWidth: 1
+                  borderWidth: 1,
+                  pointRadius: 0,
+                  spanGaps: false
               },
             {
                   label: 'min',
@@ -59,6 +61,11 @@
           options: {
               scales: {
                   yAxes: [{
+                     type: 'time',
+                     distribution: 'linear',
+                     displayFormats: {
+                        second: "DD MMM mm:ss"
+                     }
                       ticks: {
                           beginAtZero: false
                       }
