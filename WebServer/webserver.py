@@ -52,14 +52,16 @@ def setup_get():
       'title' : 'Lombok Brews Setup Climate',
       'items': programs
    }
-   return programData
+   return json.dumps(programData)
 
-@app.route("/setup_set")
+@app.route("/setup_set", methods=['GET', 'POST'])
 def setup_set():
-   min = request.args.get('min', 0, type=float)
-   max = request.args.get('max', 0, type=float)
-   start = request.args.get("start", datetime.datetime.now(), type=datetime)
-   DB.set_program({"min": min, "max": max, "start": start})
+   if request.method == "POST":
+      item = request.form
+      max = item['max']
+      min = item['min']
+      start = datetime.datetime.strptime(item['start'], "%Y-%m-%dT%H:%M")
+      DB.set_program({"min": min, "max": max, "start": start})
    return setup_get()
 
 @app.route("/clear")

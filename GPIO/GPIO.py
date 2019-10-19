@@ -19,7 +19,7 @@ def set_device(temp):
 def get_current_program(items):
 	current_item = []
 	for item in items:
-		if(datetime.strptime(item[2], "%Y-%m-%dT%H:%M") <= datetime.now()):
+		if(datetime.strptime(item[2], "%Y-%m-%d %H:%M:%S") <= datetime.now()):
 			current_item = item
 	return current_item
 			
@@ -44,6 +44,7 @@ while(True):
 	else:
 		min = 0.0
 		max = 100.0
-		print("geen actief programma")
+		print("geen actief programma!")
+		DB.add_data(float("NaN"), min, max)	
 	time.sleep(60)
 
