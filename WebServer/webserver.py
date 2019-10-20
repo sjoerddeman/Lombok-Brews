@@ -10,23 +10,7 @@ import json
 app = Flask(__name__)
 
 @app.route("/")
-def home():
-   return graph("all")
-
-@app.route("/<dataset>")
-def graph(dataset):
-   if(dataset=="daily"):
-      chartData = create_chart_data(DB.get_daily_data()) 
-   elif(dataset=="hourly"):
-      chartData = create_chart_data(DB.get_hourly_data()) 
-   elif(dataset=="last_week"):
-      chartData = create_chart_data(DB.get_last_week_data()) 
-   elif(dataset=="last_day"):
-      chartData = create_chart_data(DB.get_last_day_data()) 
-   elif(dataset=="last_hour"):
-      chartData = create_chart_data(DB.get_last_hour_data())
-   else:
-      chartData = create_chart_data(DB.get_all_data())
+   chartData = create_chart_data(DB.get_all_data())
    templateData = {
       'title' : 'Lombok Brews Climate Control',
       'labels': chartData["labels"],
@@ -49,7 +33,6 @@ def create_chart_data(items):
 def setup_get():
    programs = DB.get_program()
    programData = {
-      'title' : 'Lombok Brews Setup Climate',
       'items': programs
    }
    return json.dumps(programData)

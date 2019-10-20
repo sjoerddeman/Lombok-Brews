@@ -24,10 +24,9 @@ def get_current_program(items):
 	return current_item
 			
 
-min = 0.0
-max = 100.0
+min = float("NaN")
+max = float("NaN")
 started = False
-last_temp = 0.0;
 
 
 while(True):
@@ -42,9 +41,7 @@ while(True):
 		threading.Thread(target=set_device, args=(current_temp,)).start()
 		DB.add_data(current_temp, min, max)	
 	else:
-		min = 0.0
-		max = 100.0
 		print("geen actief programma!")
-		DB.add_data(float("NaN"), min, max)	
+		DB.add_data(float("NaN"), float("NaN"), float("NaN"))	
 	time.sleep(60)
 

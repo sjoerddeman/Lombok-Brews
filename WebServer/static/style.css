@@ -9,31 +9,8 @@ body{
 }
 
 #chart{
-	width: 80%;
+	width: 95%;
 	overflow: hidden;
-}
-
-.cold{
-	color: blue;
-}
-
-.hot{
-	color: red;
-}
-
-a:link, a:visited {
-  background-color: #f44336;
-  color: white;
-  padding: 25px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  width: 60%;
-  margin-top: 2px;
-}
-
-a:hover, a:active {
-  background-color: red;
 }
 
 /* The Modal (background) */
