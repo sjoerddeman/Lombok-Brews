@@ -11,7 +11,7 @@ DIO=17
 tm = tm1637.TM1637(clk=CLK, dio=DIO)
 
 def set_temp(temp, msg):
-	tm.scroll(msg) # 4 fps
+	#tm.scroll(msg) # 4 fps
 	temp_str = str(int(temp*10))
 	tm.write([tm.encode_char(temp_str[0]), tm.encode_char(temp_str[1]), tm.encode_char(temp_str[2]), 99])
 

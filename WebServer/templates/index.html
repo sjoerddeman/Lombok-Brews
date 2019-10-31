@@ -1,144 +1,40 @@
 <!DOCTYPE html>
    <head>
-      <title>{{ title }}</title>
+      <title>Lombok Brews Climate Control</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="../static/style.css/">
-   </head>
-
-   <body>
-      <!--div id="nav">
-         <a href="/">all</a>
-         <a href="/daily">daily</a>
-         <a href="/hourly">hourly</a>
-         <a href="/last_week">Last week</a>
-         <a href="/last_day">Last day</a>
-         <a href="/last_hour">Last hour</a>
-      </div-->
-      <div id="chart">
-         <canvas id="myChart"></canvas>
-      </div>
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
       <script src="{{ url_for('static', filename='Chart.bundle.min.js') }}"></script>
       <script src="{{ url_for('static', filename='moment.min.js') }}"></script>
       <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
       <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script>
-      
-      var ctx = document.getElementById('myChart');
-      var myChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: {{ labels|tojson }},
-              datasets: [{
-                  label: 'temperature',
-                  fill: false,
-                  backgroundColor: "#000000",
-                  data: {{ temperature|tojson }},
-                  borderColor: "#000000",
-                  borderWidth: 1,
-                  pointRadius: 0,
-                  spanGaps: false
-              },
-            {
-                  label: 'min',
-                  fill: false,
-                  spanGaps: true,
-                  backgroundColor: '#0000ff',
-                  data: {{ min|tojson }},
-                  borderColor: '#0000ff',
-                  borderWidth: 1,
-                  pointRadius: 0,
-                  lineTension: 0
-              },
-            {
-                  label: 'max',
-                  fill: false,
-                  backgroundColor: '#ff0000',
-                  data: {{ max|tojson }},
-                  borderColor: '#ff0000',
-                  borderWidth: 1,
-                  pointRadius: 0,
-                  lineTension: 0
-              }]
-          },
-          options: {
-              scales: {
-                  yAxes: [{
-                      ticks: {
-                          beginAtZero: false
-                      }
-                  }],
-                  xAxes:[{
-                     type: 'time',
-                     time: {
-                        unit: 'minute',
-                        displayFormats: {
-                           minute: 'DD-MM-YYYY HH:mm',
-                           hour: 'HH:mm',
-                           day: 'DD MM'
-                        }
-                     }
-                                       
-                  }]
-              },
-              plugins: {
-	zoom: {
-		// Container for pan options
-		// Container for zoom options
-		zoom: {
-			// Boolean to enable zooming
-			enabled: true,
-
-			// Enable drag-to-zoom behavior
-			drag: true,
-
-			// Drag-to-zoom rectangle style can be customized
-			// drag: {
-			// 	 borderColor: 'rgba(225,225,225,0.3)'
-			// 	 borderWidth: 5,
-			// 	 backgroundColor: 'rgb(225,225,225)'
-			// },
-
-			// Zooming directions. Remove the appropriate direction to disable
-			// Eg. 'y' would only allow zooming in the y direction
-			// A function that is called as the user is zooming and returns the
-			// available directions can also be used:
-			//   mode: function({ chart }) {
-			//     return 'xy';
-			//   },
-			mode: 'xy',
-
-			rangeMin: {
-				// Format of min zoom range depends on scale type
-				x: null,
-				y: null
-			},
-			rangeMax: {
-				// Format of max zoom range depends on scale type
-				x: null,
-				y: null
-			},
-
-			// Speed of zoom via mouse wheel
-			// (percentage of zoom on a wheel event)
-			speed: 0.1,
-		}
-	}
-}
-          }
-      });
+         var labels = {{ labels|tojson }};
+         var temperature = {{ temperature|tojson }};
+         var min = {{ min|tojson }};
+         var max = {{ max|tojson }};
       </script>
-      </br>
-      <a href="javascript:void(0)" id="myBtn">Set up Program</a>
-      <a href="javascript:void(0);myChart.resetZoom()">Show All</a>
-      <!-- The Modal -->
-      <div id="myModal" class="modal">
+      <script src="{{ url_for('static', filename='script.js') }}"></script>
+   </head>
 
-         <!-- Modal content -->
+   <body>
+      <div id="chart">
+         <canvas id="myChart"></canvas>
+      </div>
+      <div id="nav">
+         <img class="icon" src="{{ url_for('static', filename='setup.png') }}" onclick="javascript:void(0)" id="myBtn"></img></br>
+         <img class="icon" src="{{ url_for('static', filename='full screen.png') }}" onclick="javascript:void(0);myChart.resetZoom()"></img></br>
+         <input type="radio" name="set" value="all" checked></input>all</br>
+         <input type="radio" name="set" value="week"></input>last week</br>
+         <input type="radio" name="set" value="day"></input>last day</br>
+         <input type="radio" name="set" value="hour"></input>last hour</br>
+      </div>
+
+      <div id="myModal" class="modal">
          <div class="modal-content">
             <span class="close">&times;</span>
             Huidig Programma</br>
-            <!-- For loop logic of jinja template -->
             <div id="program_items">
             </div>
 
@@ -153,80 +49,5 @@
          </div>
 
       </div>
-<script>
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.onclick = function() {  
-   var xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
-           if (xmlhttp.status == 200) {
-               setItems(xmlhttp.responseText);
-               modal.style.display = "block";
-           }
-           else if (xmlhttp.status == 400) {
-              alert('There was an error 400');
-           }
-           else {
-               alert('something else other than 200 was returned');
-           }
-        }
-    };
-
-    xmlhttp.open("GET", "/setup_get", true);
-    xmlhttp.send();
-
-}
-
-submit.onclick = function() {  
-   $.ajax({
-      type : 'POST',
-      url : "/setup_set",
-      data : {"min": document.getElementById("minValue").value, "max": document.getElementById("maxValue").value, "start": document.getElementById("startValue").value},
-      success: function(data) {
-         setItems(data);
-      }
-   });
-}
-
-function setItems(data){
-   result = JSON.parse(data)["items"];
-   htmlData = "";
-   lastItem = null;
-   for(i = 0; i< result.length; i++){
-      htmlData += "Temperatuur tussen " + result[i][0] + " en " + result[i][1] + " start " + result[i][2] + "</br>";
-      lastItem = result[i];
-   }
-   if(lastItem==null){
-      lastStart = moment().format("YYYY-MM-DDTHH:mm");
-   }else{
-      lastStart = moment(lastItem[2]).format("YYYY-MM-DDTHH:mm");
-   }
-   document.getElementById("startValue").value = lastStart;
-   document.getElementById("startValue").min = lastStart;  
-   document.getElementById("program_items").innerHTML = htmlData;  
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-</script>
    </body>
 </html>

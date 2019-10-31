@@ -10,9 +10,9 @@ import json
 app = Flask(__name__)
 
 @app.route("/")
+def home():
    chartData = create_chart_data(DB.get_all_data())
    templateData = {
-      'title' : 'Lombok Brews Climate Control',
       'labels': chartData["labels"],
       'temperature': chartData["temperature"],
       'min': chartData["min"],
@@ -41,6 +41,7 @@ def setup_get():
 def setup_set():
    if request.method == "POST":
       item = request.form
+      print(str(item))
       max = item['max']
       min = item['min']
       start = datetime.datetime.strptime(item['start'], "%Y-%m-%dT%H:%M")
@@ -50,7 +51,7 @@ def setup_set():
 @app.route("/clear")
 def clear():
    DB.clear_data()
-   return redirect("/setup")
+   return redirect("/")
 
 @app.route("/start")
 def start():

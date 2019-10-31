@@ -1,12 +1,14 @@
 import sqlite3
 import sys
+from datetime import datetime
 
 
 # function to insert data on a table
 def add_data (temp, min, max):
+    now = datetime.now()
     conn=sqlite3.connect('../BrewDB/brewData.db')
     curs=conn.cursor()
-    curs.execute("INSERT INTO temp_data values(datetime('now'), (?), (?), (?))", (temp,min,max))
+    curs.execute("INSERT INTO temp_data values((?), (?), (?), (?))", (now,temp,min,max))
     conn.commit()
     conn.close()
 
@@ -16,57 +18,6 @@ def get_all_data():
     curs=conn.cursor()
     list = []
     for row in curs.execute("SELECT * FROM temp_data"):
-        list.append(row)
-    conn.close()
-    return list;
-    
-# get database content per day
-def get_daily_data():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    list = []
-    for row in curs.execute("SELECT * FROM temp_data WHERE rowid % 1440 = 0"):
-        list.append(row)
-    print(list)
-    conn.close()
-    return list;
-    
-# get database content per hour
-def get_hourly_data():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    list = []
-    for row in curs.execute("SELECT * FROM temp_data WHERE rowid % 60 = 0"):
-        list.append(row)
-    conn.close()
-    return list;
-    
-# get database content last week
-def get_last_week_data():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    list = []
-    for row in curs.execute("SELECT * FROM (SELECT * FROM temp_data WHERE rowid % 180 = 0 ORDER BY timestamp DESC LIMIT 56) ORDER BY timestamp ASC"):
-        list.append(row)
-    conn.close()
-    return list;
-
-# get database content last day
-def get_last_day_data():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    list = []
-    for row in curs.execute("SELECT * FROM (SELECT * FROM temp_data WHERE rowid % 30 = 0 ORDER BY timestamp DESC LIMIT 48) ORDER BY timestamp ASC"):
-        list.append(row)
-    conn.close()
-    return list;
-    
-# get database content last hour
-def get_last_hour_data():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    list = []
-    for row in curs.execute("SELECT * FROM (SELECT * FROM temp_data ORDER BY timestamp DESC LIMIT 60) ORDER BY timestamp ASC"):
         list.append(row)
     conn.close()
     return list;
@@ -98,16 +49,10 @@ def get_program ():
     conn.close()
     return program;
     
-def start_program ():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    curs.execute("UPDATE program SET started = TRUE")
-    conn.commit()
-    conn.close()
-    
-def stop_program ():
-    conn=sqlite3.connect('../BrewDB/brewData.db')
-    curs=conn.cursor()
-    curs.execute("UPDATE program SET started = FALSE")
-    conn.commit()
-    conn.close()
+
+def get_current_program_item(items):
+	current_item = []
+	for item in items:
+		if(datetime.strptime(item[2], "%Y-%m-%d %H:%M:%S") <= datetime.now()):
+			current_item = item
+	return current_item
