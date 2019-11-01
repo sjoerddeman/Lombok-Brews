@@ -6,9 +6,9 @@ import random
 import four_digit
 import ds18b20
 import lcdi2c
+import relais
 import threading
 from datetime import datetime
-from sense_hat import SenseHat
 
 def read_temp():
 	temp = ds18b20.read_temp()
@@ -17,8 +17,7 @@ def read_temp():
 def set_device(temp, min, max):
 	lcdi2c.temp_message(temp, min, max)
 	four_digit.set_display(temp, min, max)
-
-			
+	relais.set_relais_device(temp, min, max)			
 
 while(True):
 	items = DB.get_program()

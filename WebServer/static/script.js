@@ -124,19 +124,19 @@ window.onload=function(){
 		}
 
 
-		if(myChart.data.datasets[0].data.length < 60){
+		if(myChart.data.datasets[0].data.length < 30){
 			myChart.options.scales.xAxes[0].time.unit='minute';	
 			myChart.options.scales.xAxes[0].time.unitStepSize=1;
 			myChart.update();
-		}else if(myChart.data.datasets[0].data.length < 300){
+		}else if(myChart.data.datasets[0].data.length < 150){
 			myChart.options.scales.xAxes[0].time.unit='minute';	
 			myChart.options.scales.xAxes[0].time.unitStepSize=5;
 			myChart.update();
-		}else if(myChart.data.datasets[0].data.length < 3600){
+		}else if(myChart.data.datasets[0].data.length < 1800){
 			myChart.options.scales.xAxes[0].time.unit='hour';	
 			myChart.options.scales.xAxes[0].time.unitStepSize=1;
 			myChart.update();
-		}else if(myChart.data.datasets[0].data.length < 21600){
+		}else if(myChart.data.datasets[0].data.length < 10800){
 			myChart.options.scales.xAxes[0].time.unit='hour';	
 			myChart.options.scales.xAxes[0].time.unitStepSize=6;
 			myChart.update();
